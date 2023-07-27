@@ -2,7 +2,7 @@
 {
     public class MathAndNumbers
     {
-        public static void CheckPrimeNumbers() 
+        public static void CheckPrimeNumbers()
         {
             Console.WriteLine("Enter a number to find prime numbers up to that:");
             int gotNumber = 0;
@@ -32,7 +32,7 @@
             }
         }
 
-        public static void TwoPosivetOutOfThree() 
+        public static void TwoPosivetOutOfThree()
         {
             Console.WriteLine("Enter three numbers comma separated:");
             string? numbersStr = Console.ReadLine();
@@ -50,13 +50,95 @@
                 var gotNumber = -1;
                 if (int.TryParse(numberList[i], out gotNumber))
                 {
-                    if(gotNumber >= 0)
+                    if (gotNumber >= 0)
                         gotPositive++;
                 }
 
             }
             var msgOut = gotPositive == 2 ? "Got two positives out of three." : " There was no two possives numbers.";
             Console.WriteLine(msgOut);
+        }
+
+        public static void TransposeMatrix()
+        {
+            Console.WriteLine("********************Let's transpose matrixes **************************");
+            var gotMtrx = BuildMatrixRandom();
+            Console.WriteLine("Got a matrix X");
+            PrintMatrix(gotMtrx);
+            var transposedOne = TransposeMatrix<int>(gotMtrx);
+            Console.WriteLine("matrix X transposed here: ");
+            PrintMatrix(transposedOne);
+        }
+
+        private static void PrintMatrix(int[,] mtrx)
+        {
+            var rows = mtrx.GetLength(0);
+            var cols = mtrx.GetLength(1);
+
+            // Find the maximum length of elements in the matrix
+            int maxLength = 0;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    int elementLength = mtrx[i, j].ToString().Length;
+                    if (elementLength > maxLength)
+                    {
+                        maxLength = elementLength;
+                    }
+                }
+            }
+
+            // Print the top border
+            Console.WriteLine("+" + new string('-', (maxLength + 2) * cols - 1) + "+");
+
+            for (int i = 0; i < rows; i++)
+            {
+                Console.Write("| ");
+                for (int j = 0; j < cols; j++)
+                {
+                    Console.Write(mtrx[i, j].ToString().PadLeft(maxLength) + " ");
+                }
+                Console.WriteLine("|");
+            }
+
+            Console.WriteLine("+" + new string('-', (maxLength + 2) * cols - 1) + "+");
+        }
+
+        private static T[,] TransposeMatrix<T>(T[,] originalMtrx)
+        {
+            var rowsNum = originalMtrx.GetLength(0);
+            var colsNum = originalMtrx.GetLength(1);
+            T[,] matrix = new T[colsNum, rowsNum];
+
+            for (int i = 0; i < rowsNum; i++)
+            {
+                for (int j = 0; j < colsNum; j++)
+                {
+                    matrix[j, i] = originalMtrx[i, j];
+                }
+            }
+
+            return matrix;
+        }
+
+        private static int[,] BuildMatrixRandom()
+        {
+            var rnd = new Random();
+            var rows = rnd.Next(2, 12);
+            var cols = rnd.Next(2, 15);
+
+            var rstMtrx = new int[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for(int j =0; j < cols; j++)
+                {
+                    rstMtrx[i, j] = rnd.Next(0, 4500);
+                }
+            }
+
+            return rstMtrx;
         }
         private static bool IsPrimeNumber(int pNum)
         {

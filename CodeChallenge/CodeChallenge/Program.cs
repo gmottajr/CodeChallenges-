@@ -4,4 +4,5 @@ using CodeChallenge.Classes;
 Console.WriteLine("Hello, World!");
 MathAndNumbers.CheckPrimeNumbers();
 MathAndNumbers.TwoPosivetOutOfThree();
+MathAndNumbers.TransposeMatrix();
 Console.ReadKey();
