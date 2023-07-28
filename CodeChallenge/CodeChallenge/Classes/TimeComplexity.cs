@@ -90,5 +90,10 @@ namespace CodeChallenge.Classes
 
             return (int)(expectedSum - actualSum);
         }
+
+        public static int TapeEquilibrium() 
+        {
+            return 0;
+        }
     }
 }
