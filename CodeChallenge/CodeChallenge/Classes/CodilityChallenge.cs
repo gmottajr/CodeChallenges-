@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CodeChallenge.Classes
 {
     public static class CodilityChallenge
     {
+        private const string Pattern = @"([a-z])\1";
         private static Dictionary<string, int> memo = new Dictionary<string, int>();
+        private static List<string> _combinations = new List<string>();
         // Start date: March 11, 2023, 5 p.m. UTC
         /// <summary>
         /// Given two strings P and Q, both consisting of N lowercase English letters, construct a new string S by choosing one letter from either P or Q at each position. The goal is to minimize the number of distinct letters in S. 
@@ -65,9 +68,102 @@ namespace CodeChallenge.Classes
             return minDistinct;
         }
 
+        public static List<string> GetCombinations(string P, string Q)
+        {
+            List<string> combinations = new List<string>();
+
+            for (int i = 0; i < P.Length; i++)
+            {
+                for (int j = 0; j < Q.Length; j++)
+                {
+                    string combination = P[i].ToString() + Q[j].ToString();
+                    combinations.Add(combination);
+                }
+            }
+
+            return combinations;
+        }
         public static int PiCode2(string P, string Q)
         {
             return GenerateAllCombinations(P, Q, "", P.Length);
+        }
+
+        public static int PiCodeGM(string P, string Q)
+        {
+             memo.Clear();
+            _combinations.Clear();
+            if (P == Q)
+            {
+                return (from i in P.ToCharArray()
+                        select i).Distinct().Count();
+            }
+
+            var pattern = GetRepeatingPattern(P);
+            if (!string.IsNullOrEmpty(pattern) &&
+                !_combinations.Any(s => s == P))
+            {
+                _combinations.Add(P);
+            }
+
+            if (!string.IsNullOrEmpty(pattern))
+            {
+                if (!memo.ContainsKey(P))
+                    memo[P] = (from c in P.ToCharArray()
+                                         select c).Distinct().Count();
+            }
+
+            for (int i = 0; i < P.Length; i++)
+            {
+                for (int j = 0; j < Q.Length; j++)
+                {
+                    var combination = BuildCombination(P[i], Q, j);
+                    pattern = GetRepeatingPattern(combination);
+                    if (combination.Length == P.Length && 
+                        !string.IsNullOrEmpty(pattern) && 
+                        !_combinations.Any(s => s== combination))
+                    {
+                        _combinations.Add(combination); 
+                    }
+
+                    if (!string.IsNullOrEmpty(pattern))
+                    {
+                        if (!memo.ContainsKey(combination))
+                            memo[combination] = (from c in combination.ToCharArray()
+                                                 select c).Distinct().Count();
+                    }
+                }
+            }
+
+
+            Console.WriteLine(string.Join(",", _combinations));
+            Console.WriteLine(string.Join(",", memo));
+
+            var gm = (from item in memo
+                      group item by item.Value into groupGM
+                      orderby groupGM.Key
+                      select new { DistinctCount = groupGM.Key, Test = groupGM.Count() });
+            
+            return gm.First().Test;
+        }
+
+        private static string BuildCombination(char key, string q, int post)
+        {
+            var checkLength = q.Length;
+            var combination = key + q.Remove(post, 1);
+            return combination.Length == checkLength ? combination : String.Empty; 
+        }
+
+        private static string GetRepeatingPattern(string input)
+        {
+            var _rst = string.Empty;
+            Regex regex = new Regex(@"([a-z])\1+");
+            var match = regex.Match(input);
+            if (match.Success)
+            {
+                _rst = match.Groups[0].Value;
+            }
+
+            return _rst;
         }
 
         private static int GenerateAllCombinations(string P, string Q, string current, int length)
