@@ -9,7 +9,7 @@ namespace CodeChallenge.Classes
 {
     public static class CodilityChallenge
     {
-        private const string Pattern = @"([a-z])\1";
+        private const string PatternConst = @"([a-z])\1+";
         private static Dictionary<string, int> memo = new Dictionary<string, int>();
         private static List<string> _combinations = new List<string>();
         // Start date: March 11, 2023, 5 p.m. UTC
@@ -90,7 +90,7 @@ namespace CodeChallenge.Classes
 
         public static int PiCodeGM(string P, string Q)
         {
-             memo.Clear();
+            memo.Clear();
             _combinations.Clear();
             if (P == Q)
             {
@@ -109,20 +109,100 @@ namespace CodeChallenge.Classes
             {
                 if (!memo.ContainsKey(P))
                     memo[P] = (from c in P.ToCharArray()
-                                         select c).Distinct().Count();
+                               select c).Distinct().Count();
             }
 
-            for (int i = 0; i < P.Length; i++)
+            LoopThroughCombinations(P, Q);
+            LoopThroughCombinations(Q, P);
+
+            Console.WriteLine(string.Join(",", _combinations));
+            Console.WriteLine(string.Join(",", memo));
+
+            var gm = (from item in memo
+                      group item by item.Value into groupGM
+                      orderby groupGM.Key
+                      select new { DistinctCount = groupGM.Key, Test = groupGM.Count() }).ToList();
+
+            return gm.First().DistinctCount;
+        }
+
+
+        public static int PiCodeGM2(string P, string Q)
+        {
+            memo.Clear();
+            if (P == Q)
             {
-                for (int j = 0; j < Q.Length; j++)
+                return (from i in P.ToCharArray()
+                        select i).Distinct().Count();
+            }
+
+            var pattern = ExtractPatternFromTarget(P);
+
+            var patternQ = ExtractPatternFromTarget(Q);
+
+            if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(patternQ))
+              patternQ = ExtractPatternFromTarget( pattern + patternQ);
+
+            LoopThroughCombinations2(P, Q);
+            LoopThroughCombinations2(Q, P);
+
+            Console.WriteLine(string.Join(",", _combinations));
+            Console.WriteLine(string.Join(",", memo));
+
+            var gm = (from item in memo
+                      group item by item.Value into groupGM
+                      orderby groupGM.Key
+                      select new { DistinctCount = groupGM.Key, Test = groupGM.Count() }).ToList();
+
+            return gm.First().DistinctCount;
+        }
+
+        private static string ExtractPatternFromTarget(string target)
+        {
+            var pattern = GetRepeatingPattern(target);
+
+            if (!string.IsNullOrEmpty(pattern))
+            {
+                if (!memo.ContainsKey(target))
+                    memo[target] = (from c in target.ToCharArray()
+                               select c).Distinct().Count();
+            }
+
+            return pattern;
+        }
+
+        private static void LoopThroughCombinations2(string Target, string Source)
+        {
+            for (int i = 0; i < Target.Length; i++)
+            {
+                for (int j = 0; j < Source.Length; j++)
                 {
-                    var combination = BuildCombination(P[i], Q, j);
-                    pattern = GetRepeatingPattern(combination);
-                    if (combination.Length == P.Length && 
-                        !string.IsNullOrEmpty(pattern) && 
-                        !_combinations.Any(s => s== combination))
+                    var combination = BuildCombination(Target[i], Source, j);
+                    var pattern = GetRepeatingPattern(combination);
+                    
+                    if (!string.IsNullOrEmpty(pattern))
                     {
-                        _combinations.Add(combination); 
+                        if (!memo.ContainsKey(combination))
+                            memo[combination] = (from c in combination.ToCharArray()
+                                                 select c).Distinct().Count();
+                    }
+                }
+            }
+        }
+
+        private static void LoopThroughCombinations(string Target, string Source)
+        {
+            for (int i = 0; i < Target.Length; i++)
+            {
+                for (int j = 0; j < Source.Length; j++)
+                {
+                    var combination = BuildCombination(Target[i], Source, j);
+                    var pattern = GetRepeatingPattern(combination);
+                    if (combination.Length == Target.Length &&
+                        !string.IsNullOrEmpty(pattern) &&
+                        !_combinations.Any(s => s == combination))
+                    {
+                        _combinations.Add(combination);
                     }
 
                     if (!string.IsNullOrEmpty(pattern))
@@ -133,17 +213,6 @@ namespace CodeChallenge.Classes
                     }
                 }
             }
-
-
-            Console.WriteLine(string.Join(",", _combinations));
-            Console.WriteLine(string.Join(",", memo));
-
-            var gm = (from item in memo
-                      group item by item.Value into groupGM
-                      orderby groupGM.Key
-                      select new { DistinctCount = groupGM.Key, Test = groupGM.Count() });
-            
-            return gm.First().Test;
         }
 
         private static string BuildCombination(char key, string q, int post)
@@ -156,13 +225,28 @@ namespace CodeChallenge.Classes
         private static string GetRepeatingPattern(string input)
         {
             var _rst = string.Empty;
-            Regex regex = new Regex(@"([a-z])\1+");
+            var test = @"(.).*(\1{1,})";
+            Regex regex = new Regex(PatternConst);//\b([a-z])\1\b -- \b([a-z])\1+\b
             var match = regex.Match(input);
             if (match.Success)
             {
                 _rst = match.Groups[0].Value;
             }
+            else 
+            {
+                var grpAux = (from c in input.ToCharArray()
+                              group c by c into newGrp
+                              where newGrp.Count() > 1
+                              select new { repeating = newGrp.Key, Count = newGrp.Count()}).ToList();
+                var sb = new StringBuilder();
+                foreach (var grp in grpAux) 
+                {
+                    var generatingStr = new string(grp.repeating, grp.Count);
+                    sb.Append(generatingStr);
+                }
 
+                _rst = sb.ToString();
+            }
             return _rst;
         }
 
