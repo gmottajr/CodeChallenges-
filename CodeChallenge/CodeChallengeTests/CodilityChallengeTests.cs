@@ -51,5 +51,76 @@ namespace CodeChallengeTests
             minDistinct.Should().Be(1);
 
         }
+
+        [Fact]
+        public void ShouldReturnThreeWhenPIsAmzAndQISamz()
+        {
+            var P = "amz";
+            var Q = "amz";
+            var minDistinct = CodilityChallenge.PiCodeGM2(P, Q);
+            minDistinct.Should().Be(3);
+
+        }
+
+        [Fact]
+        public void ShouldReturn3WhenPIsabcdefAndQIsbcdefa()
+        {
+            var P = "abcdef";
+            var Q = "bcdefa";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(3);
+
+        }
+
+        [Fact]
+        public void ShouldReturn2WhenPIs_dcba_AndQIs_cbad()
+        {
+            var P = "dcba";
+            var Q = "cbad";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(2);
+
+        }
+
+        [Fact]
+        public void ShouldReturn1WhenPIsabacabadAndQIsdabacaba()
+        {
+            var P = "abacabad";
+            var Q = "dabacaba";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(1);
+
+        }
+
+        [Fact]
+        public void ShouldReturn3WhenPIs_bgeafdd_AndQIs_geafddc()
+        {
+            var P = "bgeafdd";
+            var Q = "geafddc";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(3);
+
+        }
+
+        [Fact]
+        public void ShouldReturn1WhenPIs_a_AndQIs_c()
+        {
+            var P = "a";
+            var Q = "c";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(1);
+
+        }
+
+        [Fact]
+        public void ShouldReturn2WhenPIs_ad_AndQIs_bc()
+        {
+            var P = "ad";
+            var Q = "bc";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(1);
+
+        }
+
     }
 }

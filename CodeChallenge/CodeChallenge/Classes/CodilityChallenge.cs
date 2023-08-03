@@ -218,8 +218,8 @@ namespace CodeChallenge.Classes
         private static string BuildCombination(char key, string q, int post)
         {
             var checkLength = q.Length;
-            var combination = key + q.Remove(post, 1);
-            return combination.Length == checkLength ? combination : String.Empty; 
+            var combination = key + (q.Length > 1 ? q.Remove(post, 1) : q);
+            return combination;
         }
 
         private static string GetRepeatingPattern(string input)
