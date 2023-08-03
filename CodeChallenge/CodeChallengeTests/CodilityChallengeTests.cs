@@ -118,7 +118,107 @@ namespace CodeChallengeTests
             var P = "ad";
             var Q = "bc";
             var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(2);
+
+        }
+
+        [Fact]
+        public void ShouldReturn1WhenPIs_dadcfdeb_AndQIs_cdaddedd()
+        {
+            var P = "dadcfdeb";
+            var Q = "cdaddedd";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
             minDistinct.Should().Be(1);
+
+        }
+
+        [Fact]
+        public void ShouldReturn2WhenPIs_aaaacbcddd_AndQIs_cdaddedd()
+        {
+            var P = "aaaacbcddd";
+            var Q = "bbbbacdaaa";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(2);
+
+        }
+
+        [Fact]
+        public void ShouldReturn4WhenPIs_adbecf_AndQIs_becfad()
+        {
+            var P = "adbecf";
+            var Q = "becfad";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(4);
+
+        }
+
+        [Fact]
+        public void ShouldReturn4WhenPIs_aaaabbbccd_AndQIs_bcdecdedee()
+        {
+            var P = "aaaabbbccd";
+            var Q = "bcdecdedee";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(4);
+
+        }
+
+        [Fact]
+        public void ShouldReturn5WhenPIs_aabbbddeefggi_AndQIs_dhcgjgifjgijj()
+        {
+            var P = "aabbbddeefggi";
+            var Q = "dhcgjgifjgijj";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(5);
+
+        }
+
+        [Fact]
+        public void ShouldReturn4WhenPIs_aaaabddddefi_AndQIs_cghjgeefhjgj()
+        {
+            var P = "aaaabddddefi";
+            var Q = "cghjgeefhjgj";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(4);
+
+        }
+
+        [Fact]
+        public void ShouldReturn4WhenPIs_abbbbddddeeeehi_AndQIs_beghjeefjfijjij()
+        {
+            var P = "abbbbddddeeeehi";
+            var Q = "beghjeefjfijjij";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(4);
+
+        }
+
+        [Fact]
+        public void ShouldReturn4WhenPIs_aaabbcdddeeggg_AndQIs_ddfccjfijfghhh()
+        {
+            var P = "aaabbcdddeeggg";
+            var Q = "ddfccjfijfghhh";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(4);
+
+        }
+
+        [Fact]
+        public void ShouldReturn3WhenPIs_bbgeafdddbbgeafdddbbgeafddd_AndQIs_ggeafddccggeafddccggeafddcc()
+        {
+            var P = "bbgeafdddbbgeafdddbbgeafddd";
+            var Q = "ggeafddccggeafddccggeafddcc";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(3);
+
+        }
+
+        [Fact]
+        public void ShouldReturn5WhenPIs_abbccdeeefhhhij_AndQIs_hcedkfhjklikkjl()
+        {
+            var P = "abbccdeeefhhhij";
+            var Q = "hcedkfhjklikkjl";
+            var minDistinct = PiCodeCodilityChallenge.Solution(P, Q);
+            minDistinct.Should().Be(5);
 
         }
 

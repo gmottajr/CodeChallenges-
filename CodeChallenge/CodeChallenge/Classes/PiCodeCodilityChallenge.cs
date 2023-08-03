@@ -31,23 +31,10 @@ namespace CodeChallenge.Classes
                 return 1;
             }
 
-            //var pattern = ExtractPatternFromTarget(P);
-
-            //var patternQ = ExtractPatternFromTarget(Q);
-
-            //if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(patternQ))
-            //{
-            //    if (CountDiscintingChar(pattern + patternQ) == 1)
-            //        return 1;
-            //}
-
-            //if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(patternQ))
-            //    patternQ = ExtractPatternFromTarget(pattern + patternQ);
-
             Intercalate(P, Q);
             Intercalate(Q, P);
-            LoopThroughCombinations(P, Q);
-            LoopThroughCombinations(Q, P);
+            //LoopThroughCombinations(P, Q);
+            //LoopThroughCombinations(Q, P);
 
             Console.WriteLine(string.Join(",", memo));
 
@@ -81,16 +68,11 @@ namespace CodeChallenge.Classes
 
         private static void VerifyPatternFromTarget(string target)
         {
-            //var pattern = IsRepeatingPattern(target);
-
-            //if (!string.IsNullOrEmpty(pattern))
             if(IsRepeatingPattern(target))
             {
                 if (!memo.ContainsKey(target))
                     memo[target] = CountDiscintingChar(target);
             }
-
-            //return pattern;
         }
 
         private static int CountDiscintingChar(string target)
@@ -106,9 +88,6 @@ namespace CodeChallenge.Classes
                 for (int j = 0; j < Source.Length; j++)
                 {
                     var combination = BuildCombination(Target[i], Source, j);
-                    //var pattern = IsRepeatingPattern(combination);
-
-                    //if (!string.IsNullOrEmpty(pattern))
                     if (IsRepeatingPattern(combination))
                     {
                         if (!memo.ContainsKey(combination))
@@ -132,37 +111,21 @@ namespace CodeChallenge.Classes
             if (input.Length <= 1)
                 return _rst;
 
-            Regex regex = new Regex(PatternConst);
-            var match = regex.Match(input);
-            _rst = match.Success;
-            //if (match.Success)
-            {
-                //_rst = match.Groups[0].Value;
-                
-            }
-            if (!match.Success)//else
-            {
-                var rgx = new Regex(@"(.).*(\1{1,})");
-                var mtch = rgx.Match(input);
-                _rst = mtch.Success; 
+            //Regex regex = new Regex(PatternConst);
+            //var match = regex.Match(input);
+            //_rst = match.Success;
 
-                //if (!mtch.Success)
-                //    return String.Empty;
+            //if (!match.Success)//else
+            //{
+            //    var rgx = new Regex(@"(.).*(\1{1,})");
+            //    var mtch = rgx.Match(input);
+            //    _rst = mtch.Success; 
+            //}
 
-                //    var grpAux = (from c in input.ToCharArray()
-                //              group c by c into newGrp
-                //              where newGrp.Count() > 1
-                //              orderby newGrp.Count()
-                //              select new { repeating = newGrp.Key, Count = newGrp.Count() }).ToList();
-                //var sb = new StringBuilder();
-                //foreach (var grp in grpAux)
-                //{
-                //    var generatingStr = new string(grp.repeating, grp.Count);
-                //    sb.Append(generatingStr);
-                //}
+            var rgx = new Regex(@"(.).*(\1{1,})");
+            var mtch = rgx.Match(input);
+            _rst = mtch.Success;
 
-                //_rst = grpAux.Count > 0 ?  new string(grpAux.First().repeating, grpAux.First().Count) : string.Empty;
-            }
             return _rst;
         }
     }
