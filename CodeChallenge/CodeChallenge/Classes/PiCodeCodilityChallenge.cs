@@ -22,19 +22,27 @@ namespace CodeChallenge.Classes
 
             if (P == Q)
             {
-                return (from i in P.ToCharArray()
-                        select i).Distinct().Count();
+                return CountDiscintingChar(P);
             }
 
             if (P.Length <= 2 && Q.Length <= 2)
             {
                 return 1;
             }
+            
+            var OneOrTwo = CanIMakeOneOrTwo(P, Q);
+            
+            if (OneOrTwo > 0) 
+                return OneOrTwo;
 
             Intercalate(P, Q);
             Intercalate(Q, P);
-            //LoopThroughCombinations(P, Q);
-            //LoopThroughCombinations(Q, P);
+            var sortedP = string.Concat(P.OrderBy(c => c));
+            var sortedQ = string.Concat(Q.OrderBy(c => c));
+            Intercalate(sortedP, sortedQ);
+            LoopThroughCombinations(sortedP, sortedQ);
+            LoopThroughCombinations(Q, P);
+            LoopThroughCombinations(Q, P);
 
             Console.WriteLine(string.Join(",", memo));
 
@@ -44,9 +52,51 @@ namespace CodeChallenge.Classes
             var gm = (from item in memo
                       group item by item.Value into groupGM
                       orderby groupGM.Key
-                      select new { DistinctCount = groupGM.Key, Test = groupGM.Count() }).ToList();
+                      select new { DistinctCount = groupGM.Key, Count = groupGM.Count() }).ToList();
 
             return gm.First().DistinctCount;
+        }
+
+        private static int CanIMakeOneOrTwo(string p, string q)
+        {
+            var _rst = false;
+            var size = p.Length;
+            var firstPart = BuldPartOfPatter(p);
+
+            if (!string.IsNullOrEmpty(firstPart))
+            {
+                var secondPart = BuldPartOfPatter(q);
+                _rst = !string.IsNullOrEmpty(secondPart);
+
+                if (!_rst)
+                    return 0;
+
+                _rst = firstPart[0] == secondPart[0];
+                
+                if (!_rst)
+                    return 0;
+
+                if ((firstPart.Length + secondPart.Length) == size)
+                    return 1;
+                else if ((firstPart.Length + secondPart.Length) + 1 == size)
+                    return 2;
+            }
+            else
+                return 0;
+
+            return 0;
+        }
+
+        private static string BuldPartOfPatter(string p)
+        {
+            var repetitions = (from c in p.ToCharArray()
+                               group c by c into groupGM
+                               orderby groupGM.Key
+                               where groupGM.Count() > 1
+                               select new { Patter = groupGM.Key, Repetition = groupGM.Count() }).ToList();
+
+            var firstPart = repetitions.Count > 0 ? new string(repetitions.First().Patter, repetitions.First().Repetition) : string.Empty;
+            return firstPart;
         }
 
         private static void Intercalate(string p, string q)

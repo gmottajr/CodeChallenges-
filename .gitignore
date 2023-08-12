@@ -5,3 +5,5 @@
 /CodeChallenge/.vs/CodeChallenge
 /CodeChallenge/CodeChallenge/bin/Debug/net6.0
 /CodeChallenge/CodeChallenge/obj
+/CodeChallenge/CodeChallengeTests/obj
+/CodeChallenge/CodeChallengeTests/bin
